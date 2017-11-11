@@ -79,6 +79,7 @@ private:
 
     int SysModeNum;
     int   Mmode;
+    float y_t;
 
 //protected:
 public:
@@ -94,11 +95,17 @@ public:
     bool  mRobo_balance_mode;
     bool    mRobo_lug_mode;
     
+    bool Rolling_mode = false;
+    
     float mOdo;       //Total distance [mm] from start point
     float mYawrate;   //ヨーレート
     float mYawangle;  //ヨー角
 
     int16_t mSonar_dis;
+
+	int32_t clock_start;
+	float   ref_odo;
+    float ref_forward;
 
     //signals for robo movement
     bool  mRobo_stop       = 0;
@@ -127,11 +134,25 @@ public:
         Garage_Stop,  //15
         Stop_Robo,  //16
         Go_LUG,  //17
+        Go_Garage,
         Track_Debug_00,
         Track_Debug_01,
         Track_Debug_02
     };
     enumTrack_Mode  Track_Mode;
+
+    enum enumGrage_Mode{
+        Garage_Start,
+        debug_wait,
+        Left_Turn,
+        Tail_On,
+        LineCheck,
+        LineComeBack,
+        LineTrace,
+        GO_GARAGE,
+        GarageIn
+    };
+    enumGrage_Mode Garage_Mode;
 
     Controller(
         ColorParts  *Color,
@@ -147,6 +168,7 @@ public:
 	void init();
 	//走行戦略を計算
 	void Track_run();
+    void Grage_Run();
 };
 
 #endif // !CONTROLLER_H_

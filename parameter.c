@@ -105,6 +105,9 @@ float GRAY_TO_GARAGE_LENGTH =  200;
 
 float GARAGE_OFFSET_ANGLE = -0.3;
 
+float GARAGE_TRACE_OFFSET_ANGLE = -5.0;
+float GARAGE_TRACE_LENGTH = 10.0;
+
 #ifdef RIGHT_MODE
 //Parameter of Course
 float FINAL_STRAIGHT_LENGTH = 2000;

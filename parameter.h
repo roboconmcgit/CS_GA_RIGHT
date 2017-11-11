@@ -124,6 +124,9 @@ extern int   GARAGE_LIT_DIST;
 
 extern float GARAGE_OFFSET_ANGLE;
 
+extern float GARAGE_TRACE_OFFSET_ANGLE;
+extern float GARAGE_TRACE_LENGTH;
+
 extern int Approach_to_LUG_time;
 extern int LUG_Tail_On_time;
 extern int LUG_Tail_On_fowrd;
