@@ -81,7 +81,7 @@ void CruiseCtrl::init() {
 // 返り値 : なし
 // 概要 : PWM値を設定する
 //*****************************************************************************
-void CruiseCtrl::setCommand(int forward, float yawratecmd, signed int tail_ang_req, float yawrate, bool tail_stand_mode, bool tail_lug_mode, bool Rolling) {
+void CruiseCtrl::setCommand(int forward, float yawratecmd, signed int tail_ang_req, float yawrate, bool tail_stand_mode, bool tail_lug_mode, int Rolling) {
 		
 	mForward         = forward;
 	mYawratecmd      = yawratecmd;
@@ -139,9 +139,14 @@ void CruiseCtrl::CruiseCtrlOperation() {
 	log_left_pwm        = mBalancer->getPwmLeft();
 	log_right_pwm       = mBalancer->getPwmRight();
 
-	if((mRolling_mode == true)&&(Stand_Mode == Tail_Stand)){
+	if((mRolling_mode == 1)&&(Stand_Mode == Tail_Stand)){
 		mtail_mode_pwm_l = 0.5*mForward + 1.0*mTurn;
 		mMotorParts->setMotorPartsLeftRight(0,mtail_mode_pwm_l);
+		balance_mode = false;
+	}
+	else if((mRolling_mode == 2)&&(Stand_Mode == Tail_Stand)){
+		mtail_mode_pwm_r = 0.5*mForward + 1.0*mTurn;
+		mMotorParts->setMotorPartsLeftRight(mtail_mode_pwm_r,0);
 		balance_mode = false;
 	}
     else if( ((balance_off_en == true) && (mMotorParts->getMotorPartsPwm(MOTORPARTS_TAIL_NO) >  70)) || (Stand_Mode == Lug_to_Stand) ){

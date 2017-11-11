@@ -135,7 +135,7 @@ public:
     bool balance_mode;
     bool  lug_mode;
 
-    bool mRolling_mode;
+    int mRolling_mode;
 
     float mYawratecmd;//目標Yawrate
     float mYawrate;
@@ -179,7 +179,7 @@ public:
            Balancer* balancer);            //コンストラクタ
     ~CruiseCtrl();                                 //デストラクタ
     void init();
-    void setCommand(int forward, float yawratecmd, signed int tail_ang_req, float yawrate, bool tail_stand_mode, bool tail_lug_mode, bool Rolling);
+    void setCommand(int forward, float yawratecmd, signed int tail_ang_req, float yawrate, bool tail_stand_mode, bool tail_lug_mode, int Rolling);
     void CruiseCtrlOperation();
     
     void tail_stand_from_balance();

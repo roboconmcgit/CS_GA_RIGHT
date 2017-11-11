@@ -88,7 +88,7 @@ mYaw_angle_offset = PAI/2;
 	
 	tail_stand_mode   = false;
 	tail_lug_mode     = false;
-	Rolling_mode      = false;
+	Rolling_mode      = 0;
 
 	clock_start = gClock->now();
 	ref_odo = 0;
@@ -474,13 +474,13 @@ void Controller::Grage_Run()
 			clock_start = gClock->now();
 			Garage_Mode = debug_wait;
 			tail_lug_mode  = false;
-			Rolling_mode = false;
+			Rolling_mode = 0;
 			break;
 		case debug_wait:
 			anglecommand = TAIL_ANGLE_RUN; //0817 tada
 			tail_stand_mode = false;
 			tail_lug_mode  = false;
-			Rolling_mode = false;
+			Rolling_mode = 0;
 			if(gClock->now() - clock_start > 5000){
 				//Garage_Mode = Left_Turn;
 				Garage_Mode = Tail_On;
@@ -491,7 +491,7 @@ void Controller::Grage_Run()
 			forward = 10;
 			tail_stand_mode = false;
 			tail_lug_mode  = false;
-			Rolling_mode = false;
+			Rolling_mode = 0;
 			y_t = -2.0*(PAI - mYawangle) + GARAGE_TRACE_OFFSET_ANGLE;
 			//yawratecmd = y_t;
 			yawratecmd = GARAGE_TRACE_OFFSET_ANGLE;
@@ -504,19 +504,23 @@ void Controller::Grage_Run()
 		case Tail_On:
 			tail_stand_mode = true;
 			tail_lug_mode  = false;
-			Rolling_mode  = false;
+			Rolling_mode  = 0;
 		
 			forward    = 0;
 			yawratecmd = 0;
 			if(mRobo_balance_mode == false){
 				Garage_Mode = LineCheck;
+				clock_start = gClock->now();
 			}
 		case LineCheck:
 			tail_stand_mode = true;
 			tail_lug_mode  = false;
-			Rolling_mode = true;
+			Rolling_mode = 1;
 			forward      = 50;
 			yawratecmd = 0;
+			if(gClock->now() - clock_start > 3000){
+				Rolling_mode = 2;
+			}
 			if(mLinevalue >= 100){
 				Garage_Mode = LineTrace;
 				tail_stand_mode = true;
@@ -530,7 +534,7 @@ void Controller::Grage_Run()
 		case LineComeBack:
 			tail_stand_mode = true;
 			tail_lug_mode  = false;
-			Rolling_mode = false;
+			Rolling_mode = 0;
 			forward      = 0;
 			yawratecmd = 0;
 			if(gClock->now() - clock_start > 1000){

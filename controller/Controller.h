@@ -95,7 +95,7 @@ public:
     bool  mRobo_balance_mode;
     bool    mRobo_lug_mode;
     
-    bool Rolling_mode = false;
+    int Rolling_mode = 0;
     
     float mOdo;       //Total distance [mm] from start point
     float mYawrate;   //ヨーレート
