@@ -8,7 +8,6 @@ APPL_COBJS += \
 APPL_CXXOBJS += \
 	BalancerCpp.o \
 	util.o \
-        ParamFileRead.o \
         Brain_Calc_Library.o \
         calibration.o \
 	ColorParts.o \

@@ -106,6 +106,7 @@ bool BrainCalcLibrary::CheckValueArea(float checkvalue){
 
 }
 
+/*
 float BrainCalcLibrary::Delay(int delaystep, float delayvaule){
 #ifdef DEQUE_EN
     delay.push_front(delayvaule);
@@ -120,7 +121,8 @@ float BrainCalcLibrary::Delay(int delaystep, float delayvaule){
 #endif
     return delay[delaystep];
 
-}
+    }
+*/
 
 void BrainCalcLibrary::SetTimer(float sampleperiod){
 

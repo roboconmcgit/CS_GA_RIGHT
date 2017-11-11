@@ -21,7 +21,7 @@
 #include "SonarParts.h"
 #include "TouchParts.h"
 
-#include <deque>
+//#include <deque>
 
 using namespace std;
 using ev3api::Clock;
