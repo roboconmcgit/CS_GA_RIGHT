@@ -92,6 +92,7 @@ Clock*       gClock;
  ){
      int ret = 0;
 
+
      switch(LUG_Mode){
 
      case LUG_Start:
