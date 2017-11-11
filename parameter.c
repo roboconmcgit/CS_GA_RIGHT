@@ -23,7 +23,7 @@ float dT_4ms   = 0.004;
 float PAI         =  3.1472;
 float FIVE_PAI    = 15.708;
 
-float RAD_1_DEG   = 0.0175; //deg@1rad 
+float RAD_1_DEG   = 0.0175; //deg@1rad
 float RAD_5_DEG   = 0.0873; //
 float RAD_15_DEG  = 0.2618; //
 float RAD_30_DEG  = 0.5236; //
@@ -91,7 +91,8 @@ int   LUG_COL_VAL_OFFSET     = 60;
 int   LUG_COL_VAL_GAIN       = 2;
 float LUG_GRAY_TO_GARAGE     = 400;
 
-float LUG_GARAGE_OFFSET     = -0.3;
+//float LUG_GARAGE_OFFSET     = -0.3;
+float LUG_GARAGE_OFFSET     = -0.0;
 
 //Parameter of Garage
 float STEP_TO_GARAGE_LENGTH = 1100;
@@ -107,12 +108,12 @@ float GARAGE_OFFSET_ANGLE = -0.3;
 #ifdef RIGHT_MODE
 //Parameter of Course
 float FINAL_STRAIGHT_LENGTH = 2000;
-// Start_to_1st_Straight, Start_to_1st_Corner, Snd_Corner, Final_Corner, Return_to_Line 
+// Start_to_1st_Straight, Start_to_1st_Corner, Snd_Corner, Final_Corner, Return_to_Line
 float CORNER_CHECK[5]={1.0, -2.0, 1.0, 1.0, 2.5};
 
 #else
 float FINAL_STRAIGHT_LENGTH = 1300.0;
-// Start_to_1st_Straight, Start_to_1st_Corner, Snd_Corner, Final_Corner, Return_to_Line 
+// Start_to_1st_Straight, Start_to_1st_Corner, Snd_Corner, Final_Corner, Return_to_Line
 float CORNER_CHECK[5]={1.0, -2.0, 2.0, 1.0, 1.0};
 
 #endif
