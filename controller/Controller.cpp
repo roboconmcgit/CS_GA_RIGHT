@@ -525,7 +525,7 @@ void Controller::Grage_Run()
 				Garage_Mode = LineTrace;
 				tail_stand_mode = true;
 				tail_lug_mode  = false;
-				Rolling_mode = false;
+				Rolling_mode = 0;
 				forward      = 0;
 				yawratecmd = 0;
 				clock_start = gClock->now();
