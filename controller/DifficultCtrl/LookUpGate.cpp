@@ -143,7 +143,8 @@
 
      case POS_ADJ_1st:
        
-       if(odo < ref_odo){
+       
+       if( (odo < ref_odo) && ((mSonar_dis >= (STOP_POS_FROM_LUG)/2)) ){
 	 forward         = 15;
 
 	 y_t             = -LUG_YAW_GAIN*(PAI - angle);
@@ -219,7 +220,9 @@
        break;
 
      case Approach_to_2nd_LUG:
-       if(odo < ref_odo){
+
+       if( (odo < ref_odo) && ((mSonar_dis >= (STOP_POS_FROM_LUG)/2)) ){
+	 //       if(odo < ref_odo){
 	 forward         = 15;
 
 	 y_t             = -LUG_YAW_GAIN*(0 - angle);
@@ -295,7 +298,9 @@
        break;
        
      case Approach_to_3rd_LUG:
-       if(odo < ref_odo){
+
+       if( (odo < ref_odo) && ((mSonar_dis >= (STOP_POS_FROM_LUG)/2)) ){
+	 //       if(odo < ref_odo){
 
 
       forward         = 15;

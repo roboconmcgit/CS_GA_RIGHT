@@ -98,7 +98,9 @@ float LUG_2nd_STOP           = 180;
 float LUG_3rd_STOP           = 200;
 
 float LUG_YAW_GAIN           = 2.0;
+
 int   LUG_COL_VAL_OFFSET     = 60;
+//int   LUG_COL_VAL_OFFSET     = 40;
 int   LUG_COL_VAL_GAIN       = 2;
 float LUG_GRAY_TO_GARAGE     = 400;
 

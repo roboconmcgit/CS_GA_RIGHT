@@ -146,6 +146,7 @@ public:
         debug_wait,
         Left_Turn,
         Tail_On,
+	Pre_LineCheck,
         LineCheck,
         LineComeBack,
         LineTrace,

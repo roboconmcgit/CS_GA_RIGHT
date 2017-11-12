@@ -75,24 +75,27 @@ Controller::~Controller(){
 // 概要 : 
 //*****************************************************************************
 void Controller::ControllerInit(){
-	Track_Mode = Start_to_1st_Straight;
-	Garage_Mode = LineCheck;
+  Track_Mode = Start_to_1st_Straight;
+  //  Garage_Mode = LineCheck;
+  Garage_Mode = Pre_LineCheck;
+
 #if 0
 Track_Mode = Go_LUG;
 mYaw_angle_offset = PAI/2;
 #endif
-    left_line_edge    = true;
-	gCruiseCtrl->init();
-	gStepRun->init();
-	gLookUpGate->init();
-	
-	tail_stand_mode   = false;
-	tail_lug_mode     = false;
-	Rolling_mode      = 0;
 
-	clock_start = gClock->now();
-	ref_odo = 0;
-	ref_forward = 0;
+ left_line_edge    = true;
+ gCruiseCtrl->init();
+ gStepRun->init();
+ gLookUpGate->init();
+	
+ tail_stand_mode   = false;
+ tail_lug_mode     = false;
+ Rolling_mode      = 0;
+
+ clock_start = gClock->now();
+ ref_odo = 0;
+ ref_forward = 0;
 }
 
 //*****************************************************************************
@@ -512,25 +515,49 @@ void Controller::Grage_Run()
 				Garage_Mode = LineCheck;
 				clock_start = gClock->now();
 			}
-		case LineCheck:
-			tail_stand_mode = true;
-			tail_lug_mode  = false;
-			Rolling_mode = 1;
-			forward      = 50;
-			yawratecmd = 0;
-			if(gClock->now() - clock_start > 3000){
-				Rolling_mode = 2;
-			}
-			if(mLinevalue >= 100){
-				Garage_Mode = LineTrace;
-				tail_stand_mode = true;
-				tail_lug_mode  = false;
-				Rolling_mode = 0;
-				forward      = 0;
-				yawratecmd = 0;
-				clock_start = gClock->now();
-			}
 			break;
+
+		case Pre_LineCheck:
+
+		  forward      = 0;
+		  yawratecmd   = 0;
+
+		  clock_start = gClock->now();
+		  Garage_Mode = LineCheck;
+
+		  break;
+
+		case LineCheck:
+		  tail_stand_mode = true;
+		  tail_lug_mode  = false;
+		  Rolling_mode = 1;
+		  forward      = 50;
+		  yawratecmd = 0;
+
+		  if(gClock->now() - clock_start > 3000){
+		    Rolling_mode = 2;
+		  }
+
+		  dammy_line_value =  LUG_COL_VAL_GAIN*(mLinevalue -  LUG_COL_VAL_OFFSET);
+		  if(dammy_line_value > 100){
+		    dammy_line_value = 100;
+		  }else if(dammy_line_value < 0){
+		    dammy_line_value = 0;
+		  }
+
+
+		  //		  if(mLinevalue >= 100){
+		  if(dammy_line_value >= 80){
+		    Garage_Mode = LineTrace;
+		    tail_stand_mode = true;
+		    tail_lug_mode  = false;
+		    Rolling_mode = 0;
+		    forward      = 0;
+		    yawratecmd = 0;
+		    clock_start = gClock->now();
+		  }
+		  break;
+
 		case LineComeBack:
 			tail_stand_mode = true;
 			tail_lug_mode  = false;
@@ -591,7 +618,7 @@ void Controller::Grage_Run()
 				forward = 10;
 			}
 
-			y_t = -2.0*(PAI - mYawangle);
+			y_t = -2.0*(PAI + RAD_1_DEG - mYawangle);
 			yawratecmd = y_t;
 			
 			if(ref_odo - mOdo < 10){
