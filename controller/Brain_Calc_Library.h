@@ -9,7 +9,7 @@
 #ifndef BRAIN_LIB_H_
 #define BRAIN_LIB_H_
 
-#include <deque>
+//#include <deque>
 //#define DEBUG
 
 using namespace std;
@@ -27,7 +27,7 @@ public:
 	void SetValueArea(float setvaule_max, float setvaule_min);
 	bool CheckValueArea(float checkvalue);
 
-	float Delay(int delaystep, float delayvaule);
+	//	float Delay(int delaystep, float delayvaule);
 
 	void SetTimer(float sampleperiod);
 	bool CheckTimer(float checktime);
@@ -40,7 +40,7 @@ private:
     float area_max=0, area_min=0;
     float Sampleperiod=0, currenttime=0, call_cnt=1;
 
-    deque<float> delay;
+    //    deque<float> delay;
 
 };
 

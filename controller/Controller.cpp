@@ -75,18 +75,27 @@ Controller::~Controller(){
 // 概要 : 
 //*****************************************************************************
 void Controller::ControllerInit(){
-	Track_Mode = Start_to_1st_Straight;
+  Track_Mode = Start_to_1st_Straight;
+  //  Garage_Mode = LineCheck;
+  Garage_Mode = Pre_LineCheck;
+
 #if 0
 Track_Mode = Go_LUG;
 mYaw_angle_offset = PAI/2;
 #endif
-    left_line_edge    = true;
-	gCruiseCtrl->init();
-	gStepRun->init();
-	gLookUpGate->init();
+
+ left_line_edge    = true;
+ gCruiseCtrl->init();
+ gStepRun->init();
+ gLookUpGate->init();
 	
-	tail_stand_mode   = false;
-	tail_lug_mode     = false;
+ tail_stand_mode   = false;
+ tail_lug_mode     = false;
+ Rolling_mode      = 0;
+
+ clock_start = gClock->now();
+ ref_odo = 0;
+ ref_forward = 0;
 }
 
 //*****************************************************************************
@@ -128,7 +137,8 @@ void Controller::ControllerOperation(){
 		anglecommand,
 		gMotorParts->yawrate,
 		tail_stand_mode,
-		tail_lug_mode);//指令値渡す
+		tail_lug_mode,
+		Rolling_mode);//指令値渡す
 
 }
 
@@ -149,9 +159,7 @@ void Controller::run(){
 // 概要 : 
 //*****************************************************************************
 void Controller::Track_run() {
-	static float   ref_odo;
   	static bool    line_det;
-	static int32_t clock_start;
 	int dammy_line_value;
 #ifdef RIGHT_MODE
 #else
@@ -323,7 +331,7 @@ void Controller::Track_run() {
 											tail_lug_mode,
 											mRobo_lug_mode,
 											mSonar_dis)){
-				Track_Mode = Approach_to_Garage;//Return_to_Line_Garage;
+				Track_Mode = Go_Garage;//Approach_to_Garage;//Return_to_Line_Garage;
 			}
 			break;
 		
@@ -433,7 +441,9 @@ void Controller::Track_run() {
 				yawratecmd = 0;
 			}
 			break;
-	
+		case Go_Garage:
+			Grage_Run();
+			break;
 		default:
 			forward = 0;
 			yawratecmd = gCruiseCtrl->LineTracerYawrate(mLinevalue, 1.0, -1.0);
@@ -443,3 +453,190 @@ void Controller::Track_run() {
 	}
 }
 	
+//*****************************************************************************
+// 関数名 : Grage_Run
+// 引数 : 
+// 返り値 : なし
+// 概要 : 
+//*****************************************************************************
+void Controller::Grage_Run()
+{
+  	int dammy_line_value;
+
+	switch(Garage_Mode){
+		case Garage_Start:
+#if 0
+#ifdef RIGHT_MODE
+			tail_stand_mode = true;
+#else
+			tail_stand_mode = false;
+#endif
+			tail_lug_mode  = false;
+			ref_odo = mOdo + GARAGE_TRACE_LENGTH;
+#endif
+			clock_start = gClock->now();
+			Garage_Mode = debug_wait;
+			tail_lug_mode  = false;
+			Rolling_mode = 0;
+			break;
+		case debug_wait:
+			anglecommand = TAIL_ANGLE_RUN; //0817 tada
+			tail_stand_mode = false;
+			tail_lug_mode  = false;
+			Rolling_mode = 0;
+			if(gClock->now() - clock_start > 5000){
+				//Garage_Mode = Left_Turn;
+				Garage_Mode = Tail_On;
+				ref_odo = mOdo + GARAGE_TRACE_LENGTH;
+			}
+			break;
+		case Left_Turn:
+			forward = 10;
+			tail_stand_mode = false;
+			tail_lug_mode  = false;
+			Rolling_mode = 0;
+			y_t = -2.0*(PAI - mYawangle) + GARAGE_TRACE_OFFSET_ANGLE;
+			//yawratecmd = y_t;
+			yawratecmd = GARAGE_TRACE_OFFSET_ANGLE;
+			if(mOdo >= ref_odo){
+				Garage_Mode = Tail_On;
+				forward    = 0;
+				yawratecmd = 0;
+			}
+			break;
+		case Tail_On:
+			tail_stand_mode = true;
+			tail_lug_mode  = false;
+			Rolling_mode  = 0;
+		
+			forward    = 0;
+			yawratecmd = 0;
+			if(mRobo_balance_mode == false){
+				Garage_Mode = LineCheck;
+				clock_start = gClock->now();
+			}
+			break;
+
+		case Pre_LineCheck:
+
+		  forward      = 0;
+		  yawratecmd   = 0;
+
+		  clock_start = gClock->now();
+		  Garage_Mode = LineCheck;
+
+		  break;
+
+		case LineCheck:
+		  tail_stand_mode = true;
+		  tail_lug_mode  = false;
+		  Rolling_mode = 1;
+		  forward      = 50;
+		  yawratecmd = 0;
+
+		  if(gClock->now() - clock_start > 3000){
+		    Rolling_mode = 2;
+		  }
+
+		  dammy_line_value =  LUG_COL_VAL_GAIN*(mLinevalue -  LUG_COL_VAL_OFFSET);
+		  if(dammy_line_value > 100){
+		    dammy_line_value = 100;
+		  }else if(dammy_line_value < 0){
+		    dammy_line_value = 0;
+		  }
+
+
+		  //		  if(mLinevalue >= 100){
+		  if(dammy_line_value >= 80){
+		    Garage_Mode = LineTrace;
+		    tail_stand_mode = true;
+		    tail_lug_mode  = false;
+		    Rolling_mode = 0;
+		    forward      = 0;
+		    yawratecmd = 0;
+		    clock_start = gClock->now();
+		  }
+		  break;
+
+		case LineComeBack:
+			tail_stand_mode = true;
+			tail_lug_mode  = false;
+			Rolling_mode = 0;
+			forward      = 0;
+			yawratecmd = 0;
+			if(gClock->now() - clock_start > 1000){
+				Garage_Mode = LineTrace;
+				ref_odo     = mOdo + 50;
+				clock_start = gClock->now();
+			}
+			break;
+		
+		// Copy for Ang_Right
+		case LineTrace:
+			//if(gClock->now() - clock_start > 2000){
+				forward       = 15;
+			//}else{
+			//	forward       = 0;
+			//}
+
+			dammy_line_value =  LUG_COL_VAL_GAIN*(mLinevalue -  LUG_COL_VAL_OFFSET);
+			if(dammy_line_value > 100){
+				dammy_line_value = 100;
+			}else if(dammy_line_value < 0){
+				dammy_line_value = 0;
+			}
+			yawratecmd = gCruiseCtrl->LineTracerYawrate(dammy_line_value, 5.0, -5.0);
+
+			//det gray zone
+			if(mOdo > ref_odo){
+				if(mYawangle <  RAD_150_DEG){
+					forward       = 0;
+				} 
+				if(mYawangle <  RAD_120_DEG){
+					forward     = 0;
+					Garage_Mode = GO_GARAGE;
+					ref_odo     = mOdo + LUG_GRAY_TO_GARAGE;
+					clock_start = gClock->now();
+				} 
+			}
+
+			break;
+		case GO_GARAGE:
+
+			ref_forward = (ref_odo - mOdo)/10.0+0.5;
+
+			if(ref_forward > 70){
+				ref_forward = 70;
+			}else if(ref_forward < 0){
+				ref_forward = 0;
+			}else{
+				ref_forward = ref_forward;
+			}
+			forward = (int)ref_forward;
+
+			if(forward < 10){
+				forward = 10;
+			}
+
+			y_t = -2.0*(PAI + RAD_1_DEG - mYawangle);
+			yawratecmd = y_t;
+			
+			if(ref_odo - mOdo < 10){
+				forward    = 0;
+				yawratecmd = 0;
+				Garage_Mode = GarageIn;
+			}
+			break;
+		case GarageIn:
+			forward    = 0;
+			yawratecmd = 0;
+			tail_stand_mode = true;
+			break;
+		default:
+			forward      = 0;
+			yawratecmd    = 0;
+			anglecommand = TAIL_ANGLE_RUN; //0817 tada
+			tail_stand_mode = false;
+			break;
+	}
+}

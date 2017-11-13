@@ -18,7 +18,7 @@
 #include "GyroParts.h"
 
 #include "BalancerCpp.h"
-#include <deque>
+//#include <deque>
 #include "MotorParts.h"
 
 using namespace std;
@@ -135,6 +135,8 @@ public:
     bool balance_mode;
     bool  lug_mode;
 
+    int mRolling_mode;
+
     float mYawratecmd;//目標Yawrate
     float mYawrate;
     int   mForward;
@@ -177,7 +179,7 @@ public:
            Balancer* balancer);            //コンストラクタ
     ~CruiseCtrl();                                 //デストラクタ
     void init();
-    void setCommand(int forward, float yawratecmd, signed int tail_ang_req, float yawrate, bool tail_stand_mode, bool tail_lug_mode);
+    void setCommand(int forward, float yawratecmd, signed int tail_ang_req, float yawrate, bool tail_stand_mode, bool tail_lug_mode, int Rolling);
     void CruiseCtrlOperation();
     
     void tail_stand_from_balance();

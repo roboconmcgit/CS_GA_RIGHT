@@ -13,12 +13,14 @@
 int calibration::set_calibration(){
   COLORPARTS_CALIBRA color_calib;
   int error = 0;
+  char s[20]={'\0'};
 //0729 kota Color Sensor Calibration
-  color_calib.white       = 60;
+  color_calib.white       = 45;
   color_calib.black       = 2;
   color_calib.white_slant = 12;
   color_calib.black_slant = 2;
 
+#if 0
   unsigned char calib_flag1=0;
   unsigned char calib_flag2=0;
 #ifdef RIGHT_MODE
@@ -26,7 +28,6 @@ int calibration::set_calibration(){
   unsigned char calib_flag4=0;
 #endif
   unsigned char calib_ref;
-  char s[20]={'\0'};
 
   ev3_speaker_play_tone(NOTE_C4,200);
   tslp_tsk(150);
@@ -168,7 +169,7 @@ int calibration::set_calibration(){
     tslp_tsk(50);
   }
 #endif
-
+#endif
   ev3_lcd_fill_rect(0, 0, EV3_LCD_WIDTH, EV3_LCD_HEIGHT, EV3_LCD_WHITE);
   sprintf(s,"BLACK : %2d",color_calib.black);
   ev3_lcd_draw_string(s, 0, CALIB_FONT_HEIGHT*1);

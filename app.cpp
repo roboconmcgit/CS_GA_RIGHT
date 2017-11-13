@@ -4,7 +4,7 @@
 
 
 #include "util.h"
-#include "ParamFileRead.h"
+//#include "ParamFileRead.h"
 #include "ev3api.h"
 #include "app.h"
 #include "Clock.h"
@@ -21,6 +21,7 @@
 // キャリブレーション
 #include "calibration.h"
 
+#define LOG_RECORD
 // デストラクタ問題の回避
 // https://github.com/ETrobocon/etroboEV3/wiki/problem_and_coping
 void *__dso_handle=0;
@@ -38,16 +39,16 @@ static TouchParts  *gTouchParts;
 static Controller  *gController;
 
 #ifdef LOG_RECORD
-static int   log_size = 15000;
+static int   log_size = 10000;
 static int   log_cnt  = 0;
-static int   log_dat_00[15000];
-static int   log_dat_01[15000];
-static int   log_dat_02[15000];
-static int   log_dat_03[15000];
-static float log_fdat_00[15000];
-static float log_fdat_01[15000];    
-static float log_fdat_02[15000];  
-static float log_fdat_03[15000];
+static int   log_dat_00[10000];
+static int   log_dat_01[10000];
+static int   log_dat_02[10000];
+static int   log_dat_03[10000];
+static float log_fdat_00[10000];
+//static float log_fdat_01[10000];    
+//static float log_fdat_02[10000];  
+//static float log_fdat_03[10000];
 #endif
 
 //*****************************************************************************
@@ -58,7 +59,7 @@ static float log_fdat_03[15000];
 //*****************************************************************************
 #ifdef LOG_RECORD
 static void log_dat( ){
-
+  /*
   log_dat_00[log_cnt]  = gController->gLookUpGate->LUG_Mode;
   log_dat_01[log_cnt]  = gController->mSonar_dis;
   log_dat_02[log_cnt]  = 0;
@@ -67,6 +68,16 @@ static void log_dat( ){
   log_fdat_01[log_cnt] = 0;
   log_fdat_02[log_cnt] = 0;  
   log_fdat_03[log_cnt] = 0;  
+  */
+  log_dat_00[log_cnt]  = gMotorParts->odo;
+  log_dat_01[log_cnt]  = (int)gMotorParts->xvalue;
+  log_dat_02[log_cnt]  = (int)gMotorParts->yvalue;
+  log_dat_03[log_cnt]  = (int)gMotorParts->velocity;
+  log_fdat_00[log_cnt] = gMotorParts->yawrate;
+  //  log_fdat_01[log_cnt] = 0;
+  //  log_fdat_02[log_cnt] = 0;  
+  //  log_fdat_03[log_cnt] = 0;  
+
 #ifdef BT_LOG
 if(bt_cmd == 1){
   fprintf(bt, "%d,%d,%d,%d,%d,%f,%f,%f,%f\n",log_cnt, log_dat_00[log_cnt],log_dat_01[log_cnt], log_dat_02[log_cnt], log_dat_03[log_cnt],log_fdat_00[log_cnt],log_fdat_01[log_cnt], log_fdat_02[log_cnt],log_fdat_03[log_cnt]);  
@@ -85,11 +96,13 @@ static void export_log_dat( ){
     file_id = fopen( "log_dat.csv" ,"w");
     fprintf(file_id, "battery:%d\n",battery);
   log_fdat_00[log_cnt] = gController->gCruiseCtrl->mYawratecmd;;
-    fprintf(file_id, "cnt,LUG_Mode,mTail_lug_mode,mTail_ang_req,Stand_Mode,mYawratecmd,lug_mode,tail_motor_pwm,getMotorPartsPwm\n");
+  //    fprintf(file_id, "cnt,odo,x,y,velocity,Yaw,lug_mode,tail_motor_pwm,getMotorPartsPwm\n");
+    fprintf(file_id, "cnt,odo,x,y,velocity,Yaw\n");
     int cnt;
 
-    for(cnt = 0; cnt < log_cnt ; cnt++){
-      fprintf(file_id, "%d,%d,%d,%d,%d,%f,%f,%f,%f\n",cnt, log_dat_00[cnt],log_dat_01[cnt], log_dat_02[cnt], log_dat_03[cnt],log_fdat_00[cnt],log_fdat_01[cnt], log_fdat_02[cnt],log_fdat_03[cnt]);
+    for(cnt = 0; cnt < log_size ; cnt++){
+      //      fprintf(file_id, "%d,%d,%d,%d,%d,%f,%f,%f,%f\n",cnt, log_dat_00[cnt],log_dat_01[cnt], log_dat_02[cnt], log_dat_03[cnt],log_fdat_00[cnt],log_fdat_01[cnt], log_fdat_02[cnt],log_fdat_03[cnt]);
+      fprintf(file_id, "%d,%d,%d,%d,%d,%f\n",cnt, log_dat_00[cnt],log_dat_01[cnt], log_dat_02[cnt], log_dat_03[cnt],log_fdat_00[cnt]);
     }
     fclose(file_id);
 }

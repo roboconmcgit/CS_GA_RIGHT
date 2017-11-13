@@ -4,6 +4,7 @@
 
 /* Fileから読み出したいパラメータを以下に追加する========================================================================= */
 int ParamFileRead::setParameters(void){
+  /*
     //intデータ
     //GetFileData_int("XXXXX", &XXXXX);
     GetFileData_int("TAIL_ANGLE_STAND_UP", &TAIL_ANGLE_STAND_UP);
@@ -24,12 +25,14 @@ int ParamFileRead::setParameters(void){
     GetFileData_float("GARAGE_OFFSET_ANGLE", &GARAGE_OFFSET_ANGLE);
     GetFileData_float("LUG_TO_GARAGE_LENGTH", &LUG_TO_GARAGE_LENGTH);
     GetFileData_float("LUG_GARAGE_OFFSET", &LUG_GARAGE_OFFSET);
-    
+  */
     return 0;
 }
 
 /*==以下は制御用なので変更不要===========================================================================================*/
 int ParamFileRead::fileRead(void){
+
+  /*
     ifstream ifs("parameter.csv");
     //  char str[256] = {'\0'};
     string str; 
@@ -69,6 +72,7 @@ int ParamFileRead::fileRead(void){
         i++;
     }
     i = 0;
+  */
     return 0;
 }
 
@@ -76,16 +80,20 @@ int ParamFileRead::fileRead(void){
 //split 
 vector<string> ParamFileRead::split(const string &str, char sep)
 {
-    vector<string> v;
+  /*  
+  vector<string> v;
     stringstream ss(str);
     string buffer;
     while( getline(ss, buffer, sep) ) {
         v.push_back(buffer);
     }
     return v;
+  */
+
 }
 
 int ParamFileRead::GetFileData_int(string dataName, int * retData){
+  /*
     if( retData == nullptr ) return -1;
     for(int i=0; i < LIST_MAX; i++){
         if(file_data_list[i].dataName == "unknown") return -1;
@@ -95,9 +103,11 @@ int ParamFileRead::GetFileData_int(string dataName, int * retData){
         }
     }
     return -1;
+  */
 }
 
 int ParamFileRead::GetFileData_float(string dataName, float * retData){
+  /*
     if( retData == nullptr ) return -1;
     for(int i=0; i < LIST_MAX; i++){
         if(file_data_list[i].dataName == "unknown") return -1;
@@ -106,5 +116,6 @@ int ParamFileRead::GetFileData_float(string dataName, float * retData){
             return 0;
         }
     }
+  */
     return -1;
 }
