@@ -618,7 +618,7 @@ void Controller::Grage_Run()
 				forward = 10;
 			}
 
-			y_t = -2.0*(PAI + RAD_1_DEG - mYawangle);
+			y_t = -2.0*(PAI + RAD_1_DEG - mYawangle); /*CS*/
 			yawratecmd = y_t;
 			
 			if(ref_odo - mOdo < 10){

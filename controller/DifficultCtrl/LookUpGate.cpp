@@ -305,7 +305,7 @@
 
       forward         = 15;
 
-      y_t             = -LUG_YAW_GAIN*(PAI + RAD_1_DEG + RAD_1_DEG - angle);
+      y_t             = -LUG_YAW_GAIN*(PAI + RAD_1_DEG + RAD_1_DEG - angle); /*CS*/
       yawratecmd      = y_t;
       tail_stand_mode = true;
       tail_lug_mode   = false;
@@ -342,7 +342,7 @@
        }
 
 
-       y_t = -LUG_YAW_GAIN*(PAI + RAD_1_DEG + RAD_1_DEG - angle);
+       y_t = -LUG_YAW_GAIN*(PAI + RAD_1_DEG + RAD_1_DEG - angle); /*CS*/
        yawratecmd = y_t;
     
        if(odo > ref_odo){
