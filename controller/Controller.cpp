@@ -547,7 +547,8 @@ void Controller::Grage_Run()
 
 
 		  //		  if(mLinevalue >= 100){
-		  if(dammy_line_value >= 80){
+		  //		  if(dammy_line_value >= 80){
+		  if(dammy_line_value >= 50){
 		    Garage_Mode = LineTrace;
 		    tail_stand_mode = true;
 		    tail_lug_mode  = false;

@@ -124,6 +124,7 @@ float GARAGE_TRACE_LENGTH = 10.0;
 #ifdef RIGHT_MODE
 //Parameter of Course
 float FINAL_STRAIGHT_LENGTH = 2000;
+
 // Start_to_1st_Straight, Start_to_1st_Corner, Snd_Corner, Final_Corner, Return_to_Line
 float CORNER_CHECK[5]={1.0, -2.0, 1.0, 1.0, 2.5};
 
